@@ -46,7 +46,7 @@ class Uplea {
     if (!session_id()) {
       session_start();
     }
-    if ($config && $this->checkConfig($config)) {
+    if (!is_null($config) && $this->checkConfig($config)) {
       $this->initSession($config);
     }
   }
@@ -58,6 +58,15 @@ class Uplea {
    */
   protected function setUsername($username) {
     $this->username = $username;
+  }
+
+  /**
+   * Set the Guest status.
+   *
+   * @param boolean $status The guest status
+   */
+  protected function setGuest($status) {
+    $this->guest = $status;
   }
 
   /**
@@ -88,6 +97,15 @@ class Uplea {
   }
 
   /**
+   * Get the Guest status.
+   *
+   * @return boolean The guest status
+   */
+  protected function getGuest() {
+    return $this->guest;
+  }
+
+  /**
    * Get the Password.
    *
    * @return string The password
@@ -114,9 +132,10 @@ class Uplea {
    */
   private function checkConfig($config) {
     if (!isset($config['username']) || empty($config['username']))
-      ;//Exception
+      throw new Exception("Invalid configuration : username");
     if (!isset($config['password']) || empty($config['password']))
-      ;//Exception
+      throw new Exception("Invalid configuration : password");
+    return true;
   }
 
   /**
@@ -128,8 +147,19 @@ class Uplea {
     $this->username = $config['username'];
     $this->password = $config['password'];
     if ($this->getMyApiKey()) {
-      $this->guest = false;
+      $this->setGuest(false);
     }
+  }
+
+  /**
+   * Get current auth status.
+   *
+   * @return boolean
+   */
+  public function isConnected() {
+    if ($this->getGuest() === false)
+      return true;
+    return false;
   }
 
   /**

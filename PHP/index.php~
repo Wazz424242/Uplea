@@ -1,0 +1,8 @@
+<?php
+
+require_once 'autoload.php';
+
+$oUplea = new Uplea(array("username" => "regis42", "password" => "424242"));
+
+if ($oUplea->isConnected())
+  echo "Successfully connected to your account !";

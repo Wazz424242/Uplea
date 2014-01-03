@@ -13,7 +13,7 @@ class Tools {
   public static function httpPost($url, $data) {
     $data_url = http_build_query($data);
     $data_len = strlen($data_url);
-    return file_get_contents($url, false, stream_context_create(array('http' => array('method' => 'POST', 'header' => "Connection: close\r\nContent-Length: $data_len\r\n", 'content' => $data_url))));
+    return file_get_contents($url, false, stream_context_create(array('http' => array('method' => 'POST', 'header' => "Connection: close\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: $data_len\r\n", 'content' => $data_url))));
   }
 
   /**
@@ -36,7 +36,7 @@ class Tools {
    * @return array The request result.
    */
   public static function apiRequest($action, $data = null) {
-    $url = "http://api.uplea.com/".$action;
+    $url = "http://api.uplea.com/api/".$action;
     if ($data)
       return json_decode(Tools::httpPost($url, array('json' => json_encode($data))), true);
     return json_decode(Tools::httpPost($url), true);
